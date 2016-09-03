@@ -24,7 +24,6 @@ function getDownloads($url, $type)
 			{
 				$linkstr = '/'.$linkstr;
 			}
-			echo 'link was '.$prevlink.' and now it is '.$linkstr.'<br>';
 			array_push($ziplinks, "https://github.com".$link->getAttribute('href'));
 		}
 	}
