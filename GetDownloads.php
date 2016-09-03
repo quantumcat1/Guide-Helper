@@ -1,20 +1,5 @@
 <?php
-/*files needed:
 
--Decrypt9 - done
--Hourglass9 - done
--arm9loaderhax - done
--Luma3ds - done
--safearm9installer - done
--universalinjectgenerator - is a zip
--hblauncher loader - done
--Luma3ds updater - done
--DSP dump - done
--FBI - done
-
-
-
-*/
 function getDownloads($url, $type)
 {
 	$html = file_get_contents($url);
