@@ -5,7 +5,9 @@ function getDownloads($url, $type)
 	$html = file_get_contents($url);
 
 	$dom = new DOMDocument;
+	libxml_use_internal_errors(true);
 	$dom->loadHtml($html);
+	libxml_use_internal_errors(false);
 
 	$links = $dom->getElementsByTagName('a');
 
@@ -13,9 +15,17 @@ function getDownloads($url, $type)
 
 	foreach ($links as $link)
 	{
-		if(strpos($link->getAttribute('href'), $type) !== false)
+		$linkstr = $link->getAttribute('href');
+		
+		if(strpos($linkstr, $type) !== false)
 		{
-			array_push($ziplinks, "https://github.com/".$link->getAttribute('href'));
+			$prevlink = $linkstr;
+			if($linkstr[0] !== '/')
+			{
+				$linkstr = '/'.$linkstr;
+			}
+			echo 'link was '.$prevlink.' and now it is '.$linkstr.'<br>';
+			array_push($ziplinks, "https://github.com".$link->getAttribute('href'));
 		}
 	}
 	foreach($ziplinks as $link)
