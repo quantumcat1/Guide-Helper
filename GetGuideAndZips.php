@@ -20,7 +20,10 @@ function convert($url, &$urlsconverted)
 		$filename = $arr[$n-2];
 	}
 	$filename = $filename.'.pdf';
-	if(file_exists($filename))
+	
+	array_push($urlsconverted, $url);
+	
+	if(file_exists('./files/'.$filename))
 	{
 		echo 'Already done '.$filename.' so not converting now. Remember to comment out this bit if you want it to overwrite existing files with their latest version.<br>';
 		return;
@@ -36,10 +39,8 @@ function convert($url, &$urlsconverted)
 
 	$output = $dompdf->output();
 	file_put_contents('./files/'.$filename, $output);
+
 	
-	
-	
-	array_push($urlsconverted, $url);
 }
 
 function findLinks($url, &$urlsconverted)
@@ -100,6 +101,8 @@ function findLinks($url, &$urlsconverted)
 
 function recursiveConvert($baseurl, &$urlsconverted)
 {
+	echo '<br>'.$baseurl.'<br>';
+	echo print_r($urlsconverted).'<br>';
 	if(!in_array($baseurl, $urlsconverted))
 	{
 		convert($baseurl, $urlsconverted);
