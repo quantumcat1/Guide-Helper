@@ -1,7 +1,7 @@
 
 <?php
-require "vendor/autoload.php";
-use Dompdf\Dompdf;
+
+include('pdflayer.class.php');
 
 function convert($url, &$urlsconverted)
 {
@@ -28,19 +28,11 @@ function convert($url, &$urlsconverted)
 		echo 'Already done '.$filename.' so not converting now. Remember to comment out this bit if you want it to overwrite existing files with their latest version.<br>';
 		return;
 	}
+	$key = 'put your key from pdflayer here'
 	
-	$dompdf = new DOMPDF();  //if you use namespaces you may use new \DOMPDF()
-	$html = file_get_contents($actuallink);
-	
-	libxml_use_internal_errors(true);
-	$dompdf->loadHtml($html);
-	libxml_use_internal_errors(false);
-	$dompdf->render();
+	$file = fopen('http://api.pdflayer.com/api/convert?access_key='.$key.'&document_url='.$actuallink, 'r');
 
-	$output = $dompdf->output();
-	file_put_contents('./files/'.$filename, $output);
-
-	
+	file_put_contents('./files/'.$filename, $file);
 }
 
 function findLinks($url, &$urlsconverted)
@@ -55,8 +47,6 @@ function findLinks($url, &$urlsconverted)
 	libxml_use_internal_errors(true);
 	$dom->loadHtml($html);
 	libxml_use_internal_errors(false);
-	
-	
 
 	$links = $dom->getElementsByTagName('a');
 	$links_to_return = array();
@@ -85,10 +75,10 @@ function findLinks($url, &$urlsconverted)
 		}
 		
 		$linkstring = $link->getAttribute('href');
-		$inguide = (strpos($link->getAttribute('href'), '/Plailect/Guide/wiki') !== FALSE);
+		$inguide = (strpos($linkstring, '/Plailect/Guide/wiki') !== FALSE);
 		$alreadyconverted = in_array($linkstring, $urlsconverted);
-		$inhistory = (strpos($link->getAttribute('href'), '_history') !== FALSE);
-		$oldguide = (strpos($link->getAttribute('href'), 'RedNAND') !== FALSE);	
+		$inhistory = (strpos($linkstring, '_history') !== FALSE);
+		$oldguide = (strpos($linkstring, 'RedNAND') !== FALSE);	
 		
 		if($inguide && !$alreadyconverted && !$inhistory && !$oldguide)
 		{
